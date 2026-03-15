@@ -1,3 +1,4 @@
+import os
 import torch
 from datasets import load_from_disk
 from transformers import (
@@ -6,7 +7,7 @@ from transformers import (
     BitsAndBytesConfig,
     TrainingArguments,
 )
-from peft import LoraConfig
+from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
 from trl import SFTTrainer
 import wandb
 
@@ -14,22 +15,25 @@ import wandb
 MODEL_PATH = "models/qwen2.5-7b-base"
 DATA_PATH = "data/cleaned/mk_corpus"
 OUTPUT_DIR = "models/mk-qwen2.5-7b"
-MAX_SEQ_LENGTH = 512
-BATCH_SIZE = 2
-GRAD_ACCUM = 8  # effective batch size = 16
+MAX_SEQ_LENGTH = 256
+BATCH_SIZE = 1
+GRAD_ACCUM = 16
 LR = 2e-4
 EPOCHS = 1
 
-# ── W&B ─────────────────────────────────────────────────────────────────────
-wandb.init(project="macedonian-llm", name="qwen2.5-7b-mk-v1")
+# ── Clear GPU cache ──────────────────────────────────────────────────────────
+torch.cuda.empty_cache()
 
-# ── Load tokenizer ───────────────────────────────────────────────────────────
+# ── W&B ─────────────────────────────────────────────────────────────────────
+wandb.init(project="macedonian-llm", name="qwen2.5-7b-mk-v2")
+
+# ── Tokenizer ────────────────────────────────────────────────────────────────
 print("Loading tokenizer...")
 tokenizer = AutoTokenizer.from_pretrained(MODEL_PATH)
 tokenizer.pad_token = tokenizer.eos_token
 tokenizer.padding_side = "right"
 
-# ── Load model in 4-bit ──────────────────────────────────────────────────────
+# ── Model ────────────────────────────────────────────────────────────────────
 print("Loading model...")
 bnb_config = BitsAndBytesConfig(
     load_in_4bit=True,
@@ -41,24 +45,27 @@ model = AutoModelForCausalLM.from_pretrained(
     MODEL_PATH,
     quantization_config=bnb_config,
     device_map="auto",
+    torch_dtype=torch.float16,
 )
 model.config.use_cache = False
+model = prepare_model_for_kbit_training(model)
 
-# ── LoRA config ──────────────────────────────────────────────────────────────
+# ── LoRA ─────────────────────────────────────────────────────────────────────
 lora_config = LoraConfig(
-    r=16,
-    lora_alpha=32,
-    target_modules=["q_proj", "k_proj", "v_proj", "o_proj",
-                    "gate_proj", "up_proj", "down_proj"],
+    r=8,
+    lora_alpha=16,
+    target_modules=["q_proj", "v_proj"],
     lora_dropout=0.05,
     bias="none",
     task_type="CAUSAL_LM",
 )
+model = get_peft_model(model, lora_config)
+model.print_trainable_parameters()
 
-# ── Load dataset ─────────────────────────────────────────────────────────────
+# ── Dataset ──────────────────────────────────────────────────────────────────
 print("Loading dataset...")
 dataset = load_from_disk(DATA_PATH)
-dataset = dataset.select(range(50000))  # start with 50k for first run
+dataset = dataset.select(range(50000))
 print(f"Training on {len(dataset):,} documents")
 
 # ── Training args ────────────────────────────────────────────────────────────
@@ -67,15 +74,17 @@ training_args = TrainingArguments(
     num_train_epochs=EPOCHS,
     per_device_train_batch_size=BATCH_SIZE,
     gradient_accumulation_steps=GRAD_ACCUM,
+    gradient_checkpointing=True,
     learning_rate=LR,
     fp16=True,
     logging_steps=25,
-    save_steps=200,
+    save_steps=500,
     save_total_limit=2,
-    warmup_ratio=0.03,
+    warmup_steps=100,
     lr_scheduler_type="cosine",
     report_to="wandb",
     optim="paged_adamw_8bit",
+    dataloader_pin_memory=False,
 )
 
 # ── Trainer ──────────────────────────────────────────────────────────────────
@@ -83,8 +92,8 @@ trainer = SFTTrainer(
     model=model,
     train_dataset=dataset,
     args=training_args,
-    peft_config=lora_config,
     processing_class=tokenizer,
+    max_seq_length=MAX_SEQ_LENGTH,
 )
 
 # ── Train ────────────────────────────────────────────────────────────────────
