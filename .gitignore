@@ -1,0 +1,15 @@
+# Data and models - too large for GitHub
+data/
+models/
+*.bin
+*.safetensors
+*.pt
+
+# Python
+__pycache__/
+*.pyc
+.env
+
+# Misc
+.cache/
+wandb/
