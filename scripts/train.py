@@ -45,7 +45,7 @@ model = AutoModelForCausalLM.from_pretrained(
     MODEL_PATH,
     quantization_config=bnb_config,
     device_map="auto",
-    torch_dtype=torch.float16,
+    dtype=torch.float16,
 )
 model.config.use_cache = False
 model = prepare_model_for_kbit_training(model)
@@ -60,12 +60,13 @@ lora_config = LoraConfig(
     task_type="CAUSAL_LM",
 )
 model = get_peft_model(model, lora_config)
+torch.backends.cuda.matmul.allow_tf32 = True
 model.print_trainable_parameters()
 
 # ── Dataset ──────────────────────────────────────────────────────────────────
 print("Loading dataset...")
 dataset = load_from_disk(DATA_PATH)
-dataset = dataset.select(range(50000))
+dataset = dataset.select(range(5000))
 print(f"Training on {len(dataset):,} documents")
 
 # ── Training args ────────────────────────────────────────────────────────────
@@ -74,9 +75,10 @@ training_args = TrainingArguments(
     num_train_epochs=EPOCHS,
     per_device_train_batch_size=BATCH_SIZE,
     gradient_accumulation_steps=GRAD_ACCUM,
-    gradient_checkpointing=True,
+    gradient_checkpointing=False,
     learning_rate=LR,
-    fp16=True,
+    fp16=False,
+    bf16=True,
     logging_steps=25,
     save_steps=500,
     save_total_limit=2,
@@ -87,13 +89,13 @@ training_args = TrainingArguments(
     dataloader_pin_memory=False,
 )
 
+
 # ── Trainer ──────────────────────────────────────────────────────────────────
 trainer = SFTTrainer(
     model=model,
     train_dataset=dataset,
     args=training_args,
     processing_class=tokenizer,
-    max_seq_length=MAX_SEQ_LENGTH,
 )
 
 # ── Train ────────────────────────────────────────────────────────────────────
