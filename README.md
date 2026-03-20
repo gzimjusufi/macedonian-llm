@@ -35,6 +35,9 @@ Train a high-quality Macedonian language model by fine-tuning an open-source LLM
 
 Evaluated on 50 held-out Macedonian Wikipedia articles.
 
+## Live Demo
+🚀 [Try the model live](https://a7ef9929b30ed7b170.gradio.live/)
+
 ## Progress
 - [x] Phase 1 — Data collection
 - [x] Phase 2 — Data cleaning
