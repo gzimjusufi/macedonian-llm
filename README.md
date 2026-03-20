@@ -26,12 +26,21 @@ Train a high-quality Macedonian language model by fine-tuning an open-source LLM
 - PEFT (QLoRA), TRL, Unsloth
 - Weights & Biases (experiment tracking)
 
+## Evaluation Results
+| Model | Perplexity | 
+|-------|-----------|
+| Qwen2.5-7B (base) | 10.64 |
+| Macedonian fine-tune (ours) | 5.21 |
+| **Improvement** | **51.0%** |
+
+Evaluated on 50 held-out Macedonian Wikipedia articles.
+
 ## Progress
 - [x] Phase 1 — Data collection
 - [x] Phase 2 — Data cleaning
 - [x] Phase 3 — Base model selection (Qwen2.5-7B)
 - [x] Phase 4 — Fine-tuning
-- [ ] Phase 5 — Evaluation & benchmarking
+- [x] Phase 5 — Evaluation & benchmarking
 - [ ] Phase 6 — Demo & deployment
 
 ## Hardware
