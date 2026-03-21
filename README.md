@@ -38,13 +38,33 @@ Evaluated on 50 held-out Macedonian Wikipedia articles.
 ## Live Demo
 🚀 [Try the model live](https://a7ef9929b30ed7b170.gradio.live/)
 
+## Qualitative Examples
+
+### Prompt: "Македонија е земја во"
+| | Output |
+|---|---|
+| **Base model** | која се живеат тие кои имаат македонскиот јазик и велито, односно национално сознание... |
+| **Fine-tuned** | југоисточна Европа и западна Азија. Главен град на Македонија е Скопје, додека населението брои 2.061.795 жители... |
+
+### Prompt: "Скопје е главниот град на"
+| | Output |
+|---|---|
+| **Base model** | ...Translate this to English? ❌ |
+| **Fine-tuned** | Република Македонија, како и административен центар на истоимениот округ... ✅ |
+
+### Prompt: "Македонскиот јазик е"
+| | Output |
+|---|---|
+| **Base model** | познат и како „македонски" во САД, на Британската република... |
+| **Fine-tuned** | јазик во кој се говори и пишува на Македонците. Тој е дел од индоевропската група јазици... |
+
 ## Progress
 - [x] Phase 1 — Data collection
 - [x] Phase 2 — Data cleaning
 - [x] Phase 3 — Base model selection (Qwen2.5-7B)
 - [x] Phase 4 — Fine-tuning
 - [x] Phase 5 — Evaluation & benchmarking
-- [ ] Phase 6 — Demo & deployment
+- [x] Phase 6 — Demo & deployment
 
 ## Hardware
 NVIDIA RTX 5070 Laptop GPU (8GB VRAM), CUDA 13.2
