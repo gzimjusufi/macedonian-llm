@@ -58,6 +58,16 @@ Evaluated on 50 held-out Macedonian Wikipedia articles.
 | **Base model** | познат и како „македонски" во САД, на Британската република... |
 | **Fine-tuned** | јазик во кој се говори и пишува на Македонците. Тој е дел од индоевропската група јазици... |
 
+## Models
+
+| Model | Description | Link |
+|-------|-------------|------|
+| macedonian-qwen2.5-7b | Base fine-tune on 10k Macedonian documents | [🤗 HuggingFace](https://huggingface.co/GzimJusufi/macedonian-qwen2.5-7b) |
+| macedonian-qwen2.5-7b-instruct | Instruction-tuned on 84 Macedonian Q&A pairs | [🤗 HuggingFace](https://huggingface.co/GzimJusufi/macedonian-qwen2.5-7b-instruct) |
+
+## Dataset
+- [macedonian-instructions](https://huggingface.co/datasets/GzimJusufi/macedonian-instructions) — 84 Macedonian instruction pairs (self-created)
+
 ## Progress
 - [x] Phase 1 — Data collection
 - [x] Phase 2 — Data cleaning
