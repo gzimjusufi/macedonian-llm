@@ -5,8 +5,12 @@ Fine-tuning a large language model for the Macedonian language — one of the mo
 ## Project Goal
 Train a high-quality Macedonian language model by fine-tuning an open-source LLM (Qwen2.5-7B) on a curated Macedonian corpus, then benchmark it against existing multilingual models.
 
-## Model
-🤗 [GzimJusufi/macedonian-qwen2.5-7b](https://huggingface.co/GzimJusufi/macedonian-qwen2.5-7b)
+## Models
+
+| Model | Description | Link |
+|-------|-------------|------|
+| macedonian-qwen2.5-7b | Base fine-tune on 10k Macedonian documents | [🤗 HuggingFace](https://huggingface.co/GzimJusufi/macedonian-qwen2.5-7b) |
+| macedonian-qwen2.5-7b-instruct | Instruction-tuned on 356 Macedonian Q&A pairs (v3) | [🤗 HuggingFace](https://huggingface.co/GzimJusufi/macedonian-qwen2.5-7b-instruct) |
 
 ## Dataset
 - **Macedonian Wikipedia** — 131,892 articles
@@ -14,29 +18,20 @@ Train a high-quality Macedonian language model by fine-tuning an open-source LLM
 - **Helsinki-NLP** — 204,246 translation pairs
 - **Total** — 370,732 clean documents
 - **Training subset** — 10,000 documents (first fine-tune run)
+- [macedonian-instructions](https://huggingface.co/datasets/GzimJusufi/macedonian-instructions) — 356 Macedonian instruction pairs (self-created)
 
 ## Results
-- Starting loss: 1.909
-- Final loss: 1.087
+- Starting loss: 1.909 → Final loss: 1.087
 - Training time: ~3.5 hours on Tesla T4
 
-## Stack
-- Python 3.11, PyTorch 2.10, CUDA 13.2
-- HuggingFace Transformers + Datasets
-- PEFT (QLoRA), TRL, Unsloth
-- Weights & Biases (experiment tracking)
-
 ## Evaluation Results
-| Model | Perplexity | 
+| Model | Perplexity |
 |-------|-----------|
 | Qwen2.5-7B (base) | 10.64 |
 | Macedonian fine-tune (ours) | 5.21 |
 | **Improvement** | **51.0%** |
 
 Evaluated on 50 held-out Macedonian Wikipedia articles.
-
-## Live Demo
-🚀 [Try the model live](https://a7ef9929b30ed7b170.gradio.live/)
 
 ## Qualitative Examples
 
@@ -58,15 +53,11 @@ Evaluated on 50 held-out Macedonian Wikipedia articles.
 | **Base model** | познат и како „македонски" во САД, на Британската република... |
 | **Fine-tuned** | јазик во кој се говори и пишува на Македонците. Тој е дел од индоевропската група јазици... |
 
-## Models
-
-| Model | Description | Link |
-|-------|-------------|------|
-| macedonian-qwen2.5-7b | Base fine-tune on 10k Macedonian documents | [🤗 HuggingFace](https://huggingface.co/GzimJusufi/macedonian-qwen2.5-7b) |
-| macedonian-qwen2.5-7b-instruct | Instruction-tuned on 84 Macedonian Q&A pairs | [🤗 HuggingFace](https://huggingface.co/GzimJusufi/macedonian-qwen2.5-7b-instruct) |
-
-## Dataset
-- [macedonian-instructions](https://huggingface.co/datasets/GzimJusufi/macedonian-instructions) — 84 Macedonian instruction pairs (self-created)
+## Stack
+- Python 3.11, PyTorch 2.10, CUDA 13.2
+- HuggingFace Transformers + Datasets
+- PEFT (QLoRA), TRL, Unsloth
+- Weights & Biases (experiment tracking)
 
 ## Progress
 - [x] Phase 1 — Data collection
