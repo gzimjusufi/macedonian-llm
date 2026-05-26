@@ -5,12 +5,15 @@ Fine-tuning a large language model for the Macedonian language — one of the mo
 ## Project Goal
 Train a high-quality Macedonian language model by fine-tuning an open-source LLM (Qwen2.5-7B) on a curated Macedonian corpus, then benchmark it against existing multilingual models.
 
+## Blog Post
+📝 [I Fine-Tuned a 7B Language Model for Macedonian — Here's What I Learned](https://medium.com/@jusufigzim2/i-fine-tuned-a-7b-language-model-for-macedonian-heres-what-i-learned-43a550c93040)
+
 ## Models
 
 | Model | Description | Link |
 |-------|-------------|------|
 | macedonian-qwen2.5-7b | Base fine-tune on 10k Macedonian documents | [🤗 HuggingFace](https://huggingface.co/GzimJusufi/macedonian-qwen2.5-7b) |
-| macedonian-qwen2.5-7b-instruct | Instruction-tuned on 356 Macedonian Q&A pairs (v3) | [🤗 HuggingFace](https://huggingface.co/GzimJusufi/macedonian-qwen2.5-7b-instruct) |
+| macedonian-qwen2.5-7b-instruct | Instruction-tuned on 542 Macedonian Q&A pairs (v4) | [🤗 HuggingFace](https://huggingface.co/GzimJusufi/macedonian-qwen2.5-7b-instruct) |
 
 ## Dataset
 - **Macedonian Wikipedia** — 131,892 articles
@@ -18,7 +21,7 @@ Train a high-quality Macedonian language model by fine-tuning an open-source LLM
 - **Helsinki-NLP** — 204,246 translation pairs
 - **Total** — 370,732 clean documents
 - **Training subset** — 10,000 documents (first fine-tune run)
-- [macedonian-instructions](https://huggingface.co/datasets/GzimJusufi/macedonian-instructions) — 356 Macedonian instruction pairs (self-created)
+- [macedonian-instructions](https://huggingface.co/datasets/GzimJusufi/macedonian-instructions) — 542 Macedonian instruction pairs (self-created)
 
 ## Results
 - Starting loss: 1.909 → Final loss: 1.087
